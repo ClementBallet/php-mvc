@@ -4,8 +4,6 @@ namespace App;
 spl_autoload_register(function ($class) {
     $class = str_replace(__NAMESPACE__ . '\\', '', $class);
     $class = str_replace('\\', '/', $class);
-    var_dump(__DIR__ . '/' . $class . '.php');
-    echo "<br>";
     require __DIR__ . '/' . $class . '.php';
 });
 ?>
@@ -25,15 +23,28 @@ spl_autoload_register(function ($class) {
 
 use App\Models\Database;
 use App\Models\Post;
+use App\Views\Single;
 
-require "views/post.php";
+/**
+ * Cette page fait office de controller pour la démo, mais dans un projet réel, le controller serait dans une classe séparée avec son namespace. Il y aurait alors sur cette page un router qui redirigerait sur l'URL voulue.
+ */
 
-$db = new Database("127.0.0.1:8889", "root", "blog", "root");
-$db->connect();
+Database::$host = "localhost";
+Database::$user = "root";
+Database::$pass = "";
+Database::$dbName = "blog";
+
+Database::connect();
 $post = new Post();
-echo "<pre>";
-var_dump($post->getPost(1));
-echo "</pre>";
+$post = $post->getPost(1)[0];
+
+render("Views/single", compact("post"));
+
+function render ($view, $data = []): void
+{
+    extract($data);
+    require $view . ".php";
+}
 
 ?>
 

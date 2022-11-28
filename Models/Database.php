@@ -7,27 +7,12 @@ use \PDOStatement;
 
 class Database
 {
-    private string $host;
-    private string $user;
-    private string $pass;
-    private string $dbName;
+    public static string $host;
+    public static string $user;
+    public static string $pass;
+    public static string $dbName;
     private static ?PDO $connexion = NULL;
-    private false|PDOStatement $request;
-
-    /**
-     * Constructeur de la classe Database
-     * @param string $host Le host de la base de données
-     * @param string $user L'utilisateur de la base de données
-     * @param string $dbName Le nom de la base de données
-     * @param string $pass Le mot de passe de la base de données
-     */
-    public function __construct(string $host, string $user, string $dbName, string $pass)
-    {
-        $this->host = $host;
-        $this->user = $user;
-        $this->pass = $pass;
-        $this->dbName = $dbName;
-    }
+    private static false|PDOStatement $request;
 
     /**
      * Connexion à la base de données à l'aide de PDO
@@ -41,8 +26,13 @@ class Database
             // Cela permet de ne pas refaire de connexion à la base de donnée si elle a déjà été faite
             if (is_null(self::$connexion))
             {
-                $path = "mysql:host=self::host;dbname=$this->dbName;charset=utf8";
-                $pdo = new PDO($path, $this->user, $this->pass);
+                $host = self::$host;
+                $dbName = self::$dbName;
+                $user = self::$user;
+                $pass = self::$pass;
+
+                $path = "mysql:host=$host;dbname=$dbName;charset=utf8";
+                $pdo = new PDO($path, $user, $pass);
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 self::$connexion = $pdo;
             }
@@ -60,19 +50,19 @@ class Database
      * @param array $array Les paramètres SQL
      * @return bool|PDOStatement
      */
-    public function prepReq(string $query, array $array = []): bool|PDOStatement
+    public static function prepReq(string $query, array $array = []): bool|PDOStatement
     {
-        $this->request = $this->connect()->prepare($query);
-        $this->request->execute($array);
-        return $this->request;
+        self::$request = self::connect()->prepare($query);
+        self::$request->execute($array);
+        return self::$request;
     }
 
     /**
      * Récupère les données
      * @return bool|array
      */
-    public function fetchData(): bool|array
+    public static function fetchData(): bool|array
     {
-        return $this->request->fetchAll(PDO::FETCH_OBJ);
+        return self::$request->fetchAll(PDO::FETCH_ASSOC);
     }
 }

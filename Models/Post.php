@@ -10,7 +10,12 @@ class Post
         $params = [
             "id" => $id
         ];
-        Database::connect->prepReq("SELECT * FROM post WHERE id = :id", $params);
-        return Database::$connexion->fetchData();
+        Database::connect();
+        Database::prepReq("SELECT * FROM post WHERE id = :id", $params);
+        return Database::fetchData();
+    }
+
+    public function getAllPost () {
+
     }
 }
