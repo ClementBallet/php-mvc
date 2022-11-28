@@ -1,5 +1,7 @@
 # PHP MVC
 
+> Installer les données dans le fichier SQL fourni pour faire fonctionner le projet.
+
 Voici un starter pour comprendre simplement l'architecture MVC.
 
 Il se veut plus simple qu'un MVC traditionnel volontairement pour saisir le fonctionnement de base.
