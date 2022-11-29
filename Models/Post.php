@@ -5,7 +5,7 @@ use App\Models\Database;
 
 class Post
 {
-    public function getPost (int $id)
+    public function getPost (int $id): bool|array
     {
         $params = [
             "id" => $id
@@ -15,7 +15,8 @@ class Post
         return Database::fetchData();
     }
 
-    public function getAllPost () {
+    public function getAllPost ()
+    {
 
     }
 }

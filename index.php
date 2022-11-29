@@ -35,17 +35,40 @@ Database::$pass = "";
 Database::$dbName = "blog";
 
 Database::connect();
-$post = new Post();
-$post = $post->getPost(1)[0];
 
-render("Views/single", compact("post"));
+// Router
+if (isset($_GET["post_id"]))
+{
+    $id = $_GET["post_id"];
+
+    if (empty($id)) {
+        echo "<h1>Error 404 : cette page n'existe pas.</h1>";
+        return;
+    }
+
+    $post = new Post();
+    $post = $post->getPost($id);
+
+    if (empty($post))
+    {
+        echo "<h1>Error 404 : cette page n'existe pas.</h1>";
+    }
+    else
+    {
+        $post = $post[0];
+        render("Views/single", compact("post"));
+    }
+}
+else
+{
+    echo "<h1>Page d'accueil</h1>";
+}
 
 function render ($view, $data = []): void
 {
     extract($data);
     require $view . ".php";
 }
-
 ?>
 
 </body>
