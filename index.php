@@ -16,6 +16,7 @@ spl_autoload_register(function ($class) {
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Mon blog</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -41,8 +42,10 @@ if (isset($_GET["post_id"]))
 {
     $id = $_GET["post_id"];
 
-    if (empty($id)) {
-        echo "<h1>Error 404 : cette page n'existe pas.</h1>";
+    if (empty($id))
+    {
+        header('HTTP/1.0 404 Not Found');
+        render("Views/404");
         return;
     }
 
@@ -51,7 +54,8 @@ if (isset($_GET["post_id"]))
 
     if (empty($post))
     {
-        echo "<h1>Error 404 : cette page n'existe pas.</h1>";
+        header('HTTP/1.0 404 Not Found');
+        render("Views/404");
     }
     else
     {
@@ -59,9 +63,24 @@ if (isset($_GET["post_id"]))
         render("Views/single", compact("post"));
     }
 }
+elseif (isset($_GET["action"]) && $_GET["action"] === "blog")
+{
+    $posts = new Post();
+    $posts = $posts->getAllPost();
+
+    if (empty($posts))
+    {
+        header('HTTP/1.0 404 Not Found');
+        render("Views/404");
+    }
+    else
+    {
+        render("Views/blog", compact("posts"));
+    }
+}
 else
 {
-    echo "<h1>Page d'accueil</h1>";
+    render("Views/home");
 }
 
 function render ($view, $data = []): void

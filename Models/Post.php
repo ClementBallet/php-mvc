@@ -17,6 +17,8 @@ class Post
 
     public function getAllPost ()
     {
-
+        Database::connect();
+        Database::prepReq("SELECT * FROM post");
+        return Database::fetchData();
     }
 }
